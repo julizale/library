@@ -21,12 +21,10 @@ public class Book {
     @Column(name = "ID")
     private long id;
 
-    @NotNull
     @ManyToOne
-    @JoinColumn(name = "ID")
+    @JoinColumn(name = "TITLE_ID")
     private Title title;
 
-    @NotNull
     @Column(name = "STATUS")
     private BookStatus bookStatus;
 

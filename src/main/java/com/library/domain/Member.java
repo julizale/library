@@ -22,15 +22,12 @@ public class Member {
     @Column(name = "ID")
     private long id;
 
-    @NotNull
     @Column(name = "FIRST_NAME")
     private String firstName;
 
-    @NotNull
     @Column(name = "LAST_NAME")
     private String lastName;
 
-    @NotNull
     @Column(name = "DATE")
     private Date accountCreated;
 

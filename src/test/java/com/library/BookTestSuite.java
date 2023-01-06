@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @SpringBootTest
 @Transactional
@@ -36,11 +36,49 @@ public class BookTestSuite {
         bookRepository.deleteById(bookId);
     }
 
-    // Given
+    @Test
+    void testBookRepositoryFindById() {
+        //Given
+        Book book = new Book();
+        bookRepository.save(book);
+        long bookId = book.getId();
+        //When
+        Optional<Book> bookFoundById = bookRepository.findById(bookId);
+        //Then
+        assertTrue(bookFoundById.isPresent());
+        //Cleanup
+        bookRepository.deleteById(bookId);
+    }
 
-    //When
+    @Test
+    void testBookRepositorySave() {
+        //Given
+        Book book = new Book();
 
-    //Then
+        //When
+        bookRepository.save(book);
+        long bookId = book.getId();
 
-    //Cleanup
+        //Then
+        try {
+            assertNotEquals(0, bookId);
+        } finally {
+            bookRepository.deleteById(bookId);
+        }
+    }
+
+    @Test
+    void testBookRepositoryDeleteById() {
+        //Given
+        Book book = new Book();
+        bookRepository.save(book);
+        long bookId = book.getId();
+
+        //When
+        bookRepository.deleteById(bookId);
+        Optional<Book> bookFoundById = bookRepository.findById(bookId);
+
+        //Then
+        assertFalse(bookFoundById.isPresent());
+    }
 }

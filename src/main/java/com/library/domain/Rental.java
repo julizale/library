@@ -3,6 +3,7 @@ package com.library.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class Rental {
 
     @Id
@@ -21,7 +23,7 @@ public class Rental {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "MEBER_ID")
+    @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
     @ManyToOne

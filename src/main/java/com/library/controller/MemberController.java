@@ -22,9 +22,9 @@ public class MemberController {
     private MemberDbService memberDbService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> addMember(@RequestBody MemberDto memberDto) {
+    public ResponseEntity<Long> addMember(@RequestBody MemberDto memberDto) {
         Member member = memberMapper.mapToMember(memberDto);
         memberDbService.saveMember(member);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(member.getId());
     }
 }

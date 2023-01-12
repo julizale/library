@@ -23,14 +23,14 @@ public class TitleController {
     private BookDbService bookDbService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> addTitle(@RequestBody TitleDto titleDto) {
+    public ResponseEntity<Long> addTitle(@RequestBody TitleDto titleDto) {
         Title title = titleMapper.mapToTitle(titleDto);
         titleDbService.saveTitle(title);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(title.getId());
     }
 
     @GetMapping(value = "/instock/{titleId}")
-    public ResponseEntity<Integer> countBooksInStock(@RequestParam Long titleId) {
+    public ResponseEntity<Integer> countBooksInStock(@PathVariable Long titleId) {
         long count = bookDbService.getBooksOfTitle(titleId).stream()
                 .filter(book -> book.getBookStatus().equals(BookStatus.IN_STOCK))
                 .count();

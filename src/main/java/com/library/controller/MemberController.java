@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
+import java.util.Date;
+
 @RestController
 @RequestMapping("/v1/members")
 public class MemberController {
@@ -24,6 +27,7 @@ public class MemberController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Long> addMember(@RequestBody MemberDto memberDto) {
         Member member = memberMapper.mapToMember(memberDto);
+        member.setAccountCreated(Date.from(Instant.now()));
         memberDbService.saveMember(member);
         return ResponseEntity.ok(member.getId());
     }

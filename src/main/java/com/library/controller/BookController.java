@@ -22,15 +22,16 @@ public class BookController {
     private BookMapper bookMapper;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> addBook (@RequestBody BookDto bookDto) throws TitleNotFoundException {
+    public ResponseEntity<Long> addBook (@RequestBody BookDto bookDto) throws TitleNotFoundException {
         Book book = bookMapper.mapToBook(bookDto);
+        book.setBookStatus(BookStatus.IN_STOCK);
         bookDbService.saveBook(book);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(book.getId());
     }
 
     @PutMapping(value = "/update/{bookId}/{bookStatus}")
-    public ResponseEntity<Void> changeBookStatus(@RequestParam long bookId,
-                                                 @RequestParam BookStatus bookStatus) throws BookNotFoundException {
+    public ResponseEntity<Void> changeBookStatus(@PathVariable long bookId,
+                                                 @PathVariable BookStatus bookStatus) throws BookNotFoundException {
         Book book = bookDbService.getBook(bookId);
         book.setBookStatus(bookStatus);
         return ResponseEntity.ok().build();

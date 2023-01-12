@@ -31,13 +31,10 @@ public class RentalController {
     @Autowired
     private MemberDbService memberDbService;
 
-    @PostMapping(value = "/rent/{memberId}/{bookId}")
-    public ResponseEntity<Long> rentBook(@RequestParam long memberId, @RequestParam long bookId) throws
-            MemberNotFoundException, BookNotFoundException, BookNotInStockException {
-        Book book = bookDbService.getBook(bookId);
-        if (!book.getBookStatus().equals(BookStatus.IN_STOCK)) {
-            throw new BookNotInStockException();
-        }
+    @PostMapping(value = "/rent/{memberId}/{titleId}")
+    public ResponseEntity<Long> rentBook(@PathVariable long memberId, @PathVariable long titleId) throws
+            Exception {
+        Book book = bookDbService.getBookInStockWithGivenTitleId(titleId);
         Member member = memberDbService.getMember(memberId);
         Rental rental = Rental.builder()
                 .book(book)
@@ -47,11 +44,11 @@ public class RentalController {
         rentalDbService.saveRental(rental);
         book.setBookStatus(BookStatus.BORROWED);
         bookDbService.saveBook(book);
-        return ResponseEntity.ok(rental.getId());
+        return ResponseEntity.ok(book.getId());
     }
 
     @PutMapping(value = "/return/{memberId}/{bookId}")
-    public ResponseEntity<Void> returnBook(@RequestParam long memberId, @RequestParam long bookId) throws Exception {
+    public ResponseEntity<Void> returnBook(@PathVariable long memberId, @PathVariable long bookId) throws Exception {
         Book book = bookDbService.getBook(bookId);
         Rental rental = rentalDbService.getCurrentRentalsByMember(memberId).stream()
                 .filter(r -> r.getBook().equals(book))
@@ -62,4 +59,5 @@ public class RentalController {
         bookDbService.saveBook(book);
         return ResponseEntity.ok().build();
     }
+
 }
